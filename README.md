@@ -52,6 +52,48 @@ Change the following line within `pg_hba.conf` and restart the container.
 + local   all             postgres                                md5
 ```
 
+## Database Schema
+
+### `service`
+
+| Field       | Data Type   | Preference                | Description                                  |
+| ----------- | ----------- | ------------------------- | -------------------------------------------- |
+| service_id  | `SERIAL`    | `PRIMARY KEY`             | Unique auto incrementing service identifier  |
+| sac         | `NUMERIC`   | `NOT NULL`                | Service Accounting Code                      |
+| description | `TEXT`      | `NOT NULL`                | SAC Service Description                      |
+| cgst        | `NUMERIC`   | `NOT NULL`                | Central Goods and Services Tax Percentage    |
+| sgst        | `NUMERIC`   | `NOT NULL`                | State Goods and Services Tax Percentage      |
+| igst        | `NUMERIC`   | `NOT NULL`                | Integrated Goods and Services Tax Percentage |
+| active      | `BOOLEAN`   | `NOT NULL` `DEFAULT TRUE` | Option to display service as a selection     |
+| created_at  | `TIMESTAMP` | `NOT NULL`                | Set when service is created                  |
+| updated_at  | `TIMESTAMP` | `NOT NULL`                | Updated every time when values are changed   |
+
+```sql
+CREATE TABLE service (
+  service_id  SERIAL PRIMARY KEY,
+  sac         NUMERIC NOT NULL,
+  description TEXT NOT NULL,
+  cgst        NUMERIC NOT NULL,
+  sgst        NUMERIC NOT NULL,
+  igst        NUMERIC NOT NULL,
+  active      BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at  TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  updated_at  TIMESTAMP NOT NULL DEFAULT current_timestamp
+);
+
+CREATE OR REPLACE FUNCTION update_timestamp_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_service_timestamp BEFORE UPDATE
+  ON service FOR EACH ROW EXECUTE PROCEDURE
+  update_timestamp_column();
+```
+
 ## License
 
 This project is licensed under the [MIT License](https://github.com/harshcut/invoice-kit/blob/main/LICENSE).
