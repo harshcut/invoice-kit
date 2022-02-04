@@ -94,6 +94,50 @@ CREATE TRIGGER update_service_timestamp BEFORE UPDATE
   update_timestamp_column();
 ```
 
+### `customer`
+
+| Field         | Data Type   | Preference                | Description                                  |
+| ------------- | ----------- | ------------------------- | -------------------------------------------- |
+| customer_id   | `SERIAL`    | `PRIMARY KEY`             | Unique auto incrementing customer identifier |
+| gstin         | `CHAR(15)`  | `NOT NULL`                | Goods and Services Tax Identification Number |
+| name          | `TEXT`      | `NOT NULL`                | Customer or Company Name                     |
+| address       | `TEXT`      | `NOT NULL`                | Customer or Company Address                  |
+| payment_terms | `TEXT`      |                           | Optional terms for bill payment              |
+| services      | `INTEGER[]` |                           | Stores `service_id` for selected services    |
+| active        | `BOOLEAN`   | `NOT NULL` `DEFAULT TRUE` | Option to display customer as a selection    |
+| created_at    | `TIMESTAMP` | `NOT NULL`                | Set when customer is created                 |
+| updated_at    | `TIMESTAMP` | `NOT NULL`                | Updated every time when values are changed   |
+
+```sql
+CREATE TABLE customer (
+  customer_id   SERIAL PRIMARY KEY,
+  gstin         CHAR(15) NOT NULL,
+  name          TEXT NOT NULL,
+  address       TEXT NOT NULL,
+  payment_terms TEXT,
+  services      INTEGER[],
+  active        BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  updated_at    TIMESTAMP NOT NULL DEFAULT current_timestamp
+);
+
+CREATE TRIGGER update_customer_timestamp BEFORE UPDATE
+  ON customer FOR EACH ROW EXECUTE PROCEDURE
+  update_timestamp_column();
+
+CREATE OR REPLACE FUNCTION upper_gstin_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.gstin = UPPER(NEW.gstin);
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER upper_customer_gstin BEFORE INSERT OR UPDATE
+  ON customer FOR EACH ROW EXECUTE PROCEDURE
+  upper_gstin_column();
+```
+
 ## License
 
 This project is licensed under the [MIT License](https://github.com/harshcut/invoice-kit/blob/main/LICENSE).
