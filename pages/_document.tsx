@@ -31,7 +31,7 @@ class MyDocument extends Document<{ styleTags: string; serializedStylesheet: str
             }}
           />
         </Head>
-        <body style={{ margin: 0 }}>
+        <body style={{ margin: 0, overflow: 'hidden' }}>
           <Main />
           <NextScript />
         </body>
