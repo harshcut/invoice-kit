@@ -138,6 +138,32 @@ CREATE TRIGGER upper_customer_gstin BEFORE INSERT OR UPDATE
   upper_gstin_column();
 ```
 
+### `invoice`
+
+| Field         | Data Type   | Preference    | Description                             |
+| ------------- | ----------- | ------------- | --------------------------------------- |
+| invoice_id    | `TEXT`      | `PRIMARY KEY` | Unique incrementing invoice number      |
+| date          | `DATE`      | `NOT NULL`    | Date to be printed on invoice           |
+| customer_id   | `INTEGER`   | `NOT NULL`    | Customer identifier                     |
+| customer_data | `JSON`      | `NOT NULL`    | Stores data for selected `customer_id`  |
+| payment_terms | `TEXT`      | `NOT NULL`    | Optional terms for bill payment         |
+| particulars   | `JSON`      | `NOT NULL`    | Collection of rows with text and amount |
+| total_amount  | `NUMERIC`   | `NOT NULL`    | Total of amount including taxes         |
+| created_at    | `TIMESTAMP` | `NOT NULL`    | Set when invoice is created             |
+
+```sql
+CREATE TABLE invoice (
+  invoice_id    TEXT PRIMARY KEY,
+  date          DATE NOT NULL,
+  customer_id   INTEGER NOT NULL,
+  customer_data JSON NOT NULL,
+  payment_terms TEXT NOT NULL,
+  particulars   JSON NOT NULL,
+  total_amount  NUMERIC NOT NULL,
+  created_at    TIMESTAMP NOT NULL DEFAULT current_timestamp
+);
+```
+
 ## License
 
 This project is licensed under the [MIT License](https://github.com/harshcut/invoice-kit/blob/main/LICENSE).
