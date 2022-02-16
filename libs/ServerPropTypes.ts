@@ -3,6 +3,10 @@ export type TableSeq = {
   is_called: boolean;
 };
 
+export type InvoiceSeq = {
+  invoice_id?: string;
+};
+
 export type ServiceMst = {
   service_id: number;
   sac: number;
@@ -45,4 +49,31 @@ export type NewCustomer = {
   payment_terms?: string;
   services?: number[];
   active?: boolean;
+};
+
+export type InvoiceMst = {
+  invoice_id: string;
+  date: string;
+  customer_id: number;
+  customer_data: CustomerMst;
+  payment_terms: string;
+  particulars: {
+    text: string;
+    amount?: number;
+    service_data?: ServiceMst;
+  }[];
+  total_amount: number;
+  created_at: string;
+};
+
+export type NewInvoice = {
+  invoice_id: string;
+  date: Date;
+  customer_id: number;
+  payment_terms: string;
+  particulars: {
+    optional?: string;
+    amount: string;
+  }[];
+  total_amount: number;
 };
