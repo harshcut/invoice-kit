@@ -1871,6 +1871,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+to-words@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/to-words/-/to-words-3.1.0.tgz#d2fd83175c0be95740875e75024350aa3dd3e915"
+  integrity sha512-RUs41Ky6rzN3HFSzeLjkHgEw/PsV1o04y2GQqHla9TwILZCcWo6ABsyHfLpC5i4cyaHPxVLx1WUj7viN44OTfQ==
+
 tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
