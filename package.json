@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.57.0",
+    "@react-pdf/renderer": "^2.1.1",
     "@supabase/supabase-js": "^1.30.7",
     "moment": "^2.29.1",
     "next": "12.1.0",
