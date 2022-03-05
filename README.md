@@ -164,6 +164,47 @@ CREATE TABLE invoice (
 );
 ```
 
+### `owner`
+
+| Field           | Data Type   | Preference    | Description                                  |
+| --------------- | ----------- | ------------- | -------------------------------------------- |
+| owner_id        | `SERIAL`    | `PRIMARY KEY` | Unique auto incrementing owner identifier    |
+| name            | `TEXT`      | `NOT NULL`    | Owner Name                                   |
+| address         | `TEXT`      | `NOT NULL`    | Owner Address                                |
+| phone           | `TEXT`      | `NOT NULL`    | Owner Phone Number                           |
+| gstin           | `CHAR(15)`  | `NOT NULL`    | Goods and Services Tax Identification Number |
+| optional        | `JSON`      |               | Optional text for invoice header             |
+| payment_details | `JSON`      |               | Wire Transfer Payment Details                |
+| updated_at      | `TIMESTAMP` | `NOT NULL`    | Updated every time when values are changed   |
+
+```sql
+CREATE TABLE owner (
+  owner_id        SERIAL PRIMARY KEY,
+  name            TEXT NOT NULL,
+  address         TEXT NOT NULL,
+  phone           TEXT NOT NULL,
+  gstin           CHAR(15) NOT NULL,
+  optional        JSON,
+  payment_details JSON,
+  updated_at      TIMESTAMP NOT NULL DEFAULT current_timestamp
+);
+
+INSERT INTO owner (name, address, phone, gstin) VALUES (
+  'Company Name',
+  'Blg No, Street Name, City Name, State Name, Country Name, Nearby Landmark — Zip Code',
+  '+91 12345 6789',
+  '27AAAAA0000A1Z5'
+);
+
+CREATE TRIGGER update_owner_timestamp BEFORE UPDATE
+  ON owner FOR EACH ROW EXECUTE PROCEDURE
+  update_timestamp_column();
+
+CREATE TRIGGER upper_owner_gstin BEFORE INSERT OR UPDATE
+  ON owner FOR EACH ROW EXECUTE PROCEDURE
+  upper_gstin_column();
+```
+
 ## License
 
 This project is licensed under the [MIT License](https://github.com/harshcut/invoice-kit/blob/main/LICENSE).
