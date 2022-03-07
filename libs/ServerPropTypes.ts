@@ -77,3 +77,35 @@ export type NewInvoice = {
   }[];
   total_amount: number;
 };
+
+export type OwnerMst = {
+  owner_id: number;
+  name: string;
+  address: string;
+  phone: string;
+  gstin: string;
+  optional?: {
+    key: string;
+    value: string;
+  }[];
+  payment_details?: {
+    key: string;
+    value: string;
+  }[];
+  updated_at: string;
+};
+
+export type NewOwner = {
+  name: string;
+  address: string;
+  phone: string;
+  gstin: string;
+  optional?: {
+    key: string;
+    value: string;
+  }[];
+  payment_details?: {
+    key: string;
+    value: string;
+  }[];
+};
