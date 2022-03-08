@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Stack, Separator, DefaultButton, PrimaryButton, IComboBoxOption } from '@fluentui/react';
+import { Dialog, DialogFooter } from '@fluentui/react';
 import { ServerPropTypes, getInvoiceSerial, getInvoiceData, supabase } from 'libs';
-import { RHF } from 'components';
+import { RHF, InvoiceTemplate } from 'components';
 
 interface Props {
   serialValue: string;
@@ -14,6 +16,8 @@ const NewInvoiceForm = ({ serialValue, customerOptions }: Props): React.ReactEle
   const [showForm, setShowForm] = useState<boolean>(false);
   const [customerData, setCustomerData] = useState<ServerPropTypes.CustomerMst>();
   const [serviceData, setServiceData] = useState<ServerPropTypes.ServiceMst[]>();
+  const [pdfData, setPdfData] =
+    useState<{ invoiceData?: ServerPropTypes.InvoiceMst; ownerData?: ServerPropTypes.OwnerMst }>();
   const { control, handleSubmit, setValue, reset } = useForm<ServerPropTypes.NewInvoice>();
 
   const onSelectCustomer = async (customer_id: number) => {
@@ -46,6 +50,12 @@ const NewInvoiceForm = ({ serialValue, customerOptions }: Props): React.ReactEle
         .from('invoice')
         .insert([getInvoiceData(formData, customerData, serviceData)]);
       if (!data) return;
+      if (!pdfData?.ownerData) {
+        const { data } = await supabase.from<ServerPropTypes.OwnerMst>('owner').select().limit(1);
+        if (!data) return;
+        setPdfData((rest) => ({ ...rest, ownerData: data[0] }));
+      }
+      setPdfData((rest) => ({ ...rest, invoiceData: data[0] }));
       setCurrValue(getInvoiceSerial(data[0].invoice_id));
       onReset();
     }
@@ -128,6 +138,28 @@ const NewInvoiceForm = ({ serialValue, customerOptions }: Props): React.ReactEle
           </Stack>
         </>
       )}
+      <Dialog
+        hidden={!(pdfData?.invoiceData && pdfData?.ownerData)}
+        onDismiss={() => setPdfData((rest) => ({ ...rest, invoiceData: undefined }))}
+        dialogContentProps={{
+          title: 'Save Invoice',
+          subText: 'This is the only time you will be able to download the original invoice.',
+        }}
+        modalProps={{ isBlocking: true }}
+      >
+        <DialogFooter>
+          {pdfData?.invoiceData && pdfData?.ownerData && (
+            <PDFDownloadLink
+              document={
+                <InvoiceTemplate invoiceData={pdfData.invoiceData} ownerData={pdfData.ownerData} />
+              }
+              fileName={`${pdfData.invoiceData.invoice_id}.pdf`}
+            >
+              {({ loading }) => <PrimaryButton disabled={loading}>Download</PrimaryButton>}
+            </PDFDownloadLink>
+          )}
+        </DialogFooter>
+      </Dialog>
     </form>
   );
 };
