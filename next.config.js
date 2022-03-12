@@ -5,6 +5,9 @@ const nextConfig = {
     config.resolve.alias['iconv-lite'] = false;
     return config;
   },
+  experimental: {
+    outputStandalone: true,
+  },
 };
 
 module.exports = nextConfig;

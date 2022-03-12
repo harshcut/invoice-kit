@@ -1,0 +1,7 @@
+version: '3.3'
+services:
+  web:
+    build: .
+    container_name: 'invoice-kit'
+    ports:
+      - '8080:8080'
