@@ -12,8 +12,10 @@ interface Props {
 }
 
 const AllInvoice: NextPage<Props> = ({ invoice_mst, owner_mst }: Props) => {
-  const [pdfData, setPdfData] =
-    useState<{ invoiceData?: ServerPropTypes.InvoiceMst; ownerData?: ServerPropTypes.OwnerMst }>();
+  const [pdfData, setPdfData] = useState<{
+    invoiceData?: ServerPropTypes.InvoiceMst;
+    ownerData?: ServerPropTypes.OwnerMst;
+  }>();
 
   useEffect(() => {
     owner_mst && setPdfData((rest) => ({ ...rest, ownerData: owner_mst[0] }));

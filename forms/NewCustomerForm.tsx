@@ -13,7 +13,9 @@ const NewCustomerForm = ({ serialValue, serviceOptions }: Props): React.ReactEle
   const [currValue, setCurrValue] = useState<number>(serialValue);
   const { control, handleSubmit, reset } = useForm<ServerPropTypes.NewCustomer>();
 
-  const onSubmit: SubmitHandler<ServerPropTypes.NewCustomer> = async (formData: any) => {
+  const onSubmit: SubmitHandler<ServerPropTypes.NewCustomer> = async (
+    formData: ServerPropTypes.NewCustomer
+  ) => {
     const { data } = await supabase.from('customer').insert([formData]);
     if (!data) return;
     setCurrValue((v) => v + 1);
