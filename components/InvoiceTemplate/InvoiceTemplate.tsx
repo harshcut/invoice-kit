@@ -68,8 +68,8 @@ const InvoiceTemplate = ({ ownerData, invoiceData, duplicate }: Props): React.Re
               Payment Terms: {invoiceData.payment_terms}
             </Text>
             <Text style={{ padding: 6 }}>
-              Billing Period: {moment(invoiceData.date).startOf('month').format('DD/MM/YY')} to{' '}
-              {moment(invoiceData.date).endOf('month').format('DD/MM/YY')}
+              Billing Period: {moment(invoiceData.billing_period.start).format('DD/MM/YY')} to{' '}
+              {moment(invoiceData.billing_period.end).format('DD/MM/YY')}
             </Text>
           </View>
         </View>

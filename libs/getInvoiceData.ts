@@ -36,6 +36,10 @@ const getInvoiceData = (
     customer_id: formData.customer_id,
     customer_data: customerData,
     payment_terms: formData.payment_terms,
+    billing_period: {
+      start: moment(formData.billing_period.start).format('YYYY-MM-DD'),
+      end: moment(formData.billing_period.end).format('YYYY-MM-DD'),
+    },
     particulars: [
       ...preTax,
       { text: 'Sub Total (A)', amount: subTotalA },

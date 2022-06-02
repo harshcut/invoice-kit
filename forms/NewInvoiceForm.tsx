@@ -16,13 +16,16 @@ const NewInvoiceForm = ({ serialValue, customerOptions }: Props): React.ReactEle
   const [showForm, setShowForm] = useState<boolean>(false);
   const [customerData, setCustomerData] = useState<ServerPropTypes.CustomerMst>();
   const [serviceData, setServiceData] = useState<ServerPropTypes.ServiceMst[]>();
-  const [pdfData, setPdfData] =
-    useState<{ invoiceData?: ServerPropTypes.InvoiceMst; ownerData?: ServerPropTypes.OwnerMst }>();
+  const [pdfData, setPdfData] = useState<{
+    invoiceData?: ServerPropTypes.InvoiceMst;
+    ownerData?: ServerPropTypes.OwnerMst;
+  }>();
   const { control, handleSubmit, setValue, reset } = useForm<ServerPropTypes.NewInvoice>();
 
   const onSelectCustomer = async (customer_id: number) => {
     setShowForm(false);
     setValue('invoice_id', currValue);
+    setValue('date', new Date());
     const { data: customer_mst } = await supabase
       .from<ServerPropTypes.CustomerMst>('customer')
       .select()
@@ -88,6 +91,24 @@ const NewInvoiceForm = ({ serialValue, customerOptions }: Props): React.ReactEle
               maxDate={new Date()}
               control={control}
               name="date"
+              rules={{ required: 'Required Field' }}
+              styles={{ root: { width: '177px' } }}
+            />
+          </Stack>
+          <Stack horizontal tokens={{ childrenGap: 28 }}>
+            <RHF.DatePicker
+              label="Billing Period: Start"
+              textField={{ description: 'Start date for bill payment' }}
+              control={control}
+              name="billing_period.start"
+              rules={{ required: 'Required Field' }}
+              styles={{ root: { width: '177px' } }}
+            />
+            <RHF.DatePicker
+              label="Billing Period: End"
+              textField={{ description: 'End date for bill payment' }}
+              control={control}
+              name="billing_period.end"
               rules={{ required: 'Required Field' }}
               styles={{ root: { width: '177px' } }}
             />

@@ -57,6 +57,10 @@ export type InvoiceMst = {
   customer_id: number;
   customer_data: CustomerMst;
   payment_terms: string;
+  billing_period: {
+    start: string;
+    end: string;
+  };
   particulars: {
     text: string;
     amount?: number;
@@ -71,6 +75,10 @@ export type NewInvoice = {
   date: Date;
   customer_id: number;
   payment_terms: string;
+  billing_period: {
+    start: string;
+    end: string;
+  };
   particulars: {
     optional?: string;
     amount: string;
