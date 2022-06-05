@@ -6,19 +6,19 @@ const getInvoiceData = (
   customerData: ServerPropTypes.CustomerMst,
   serviceData: ServerPropTypes.ServiceMst[]
 ): Omit<ServerPropTypes.InvoiceMst, 'created_at'> => {
-  const preTax: Array<{ text: string; amount: number; service_data?: ServerPropTypes.ServiceMst }> =
+  const preTax: Array<{ text: string; amount: number; service_data: ServerPropTypes.ServiceMst }> =
     formData.particulars
       .map((item, service_id) => {
-        const current = serviceData?.find((service) => service.service_id === service_id);
+        const current = serviceData.find((service) => service.service_id === service_id)!;
         return {
           text: [current?.description, item?.optional, `(SAC: ${current?.sac})`]
             .filter(Boolean)
             .join(' '),
-          amount: Number(Number(item?.amount).toFixed(2)),
+          amount: Number(Number(item.amount).toFixed(2)),
           service_data: current,
         };
       })
-      .filter(Boolean);
+      .filter(({ service_data }) => service_data);
   const subTotalA: number = preTax.reduce((acc, curr) => acc + curr.amount, 0);
 
   let postTax: Array<{ text: string; amount: number }>;
